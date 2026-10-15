@@ -1,17 +1,20 @@
-name: Deploy to GitHub Pages
+name: Build site
+
+# GitHub Pages serves the repo root of `main` ("Deploy from a branch").
+# Edit the site in source/; this workflow rebuilds it and commits the output
+# (index.html, 404.html, assets/) to the root so Pages publishes it.
 
 on:
   push:
     branches: [main]
+    paths: ["source/**"]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: build-site
   cancel-in-progress: true
 
 jobs:
@@ -23,29 +26,27 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: source/package-lock.json
       - run: npm ci
-      # With a custom domain (public/CNAME) the site lives at "/", otherwise at "/<repo>/".
-      - name: Pick base path
-        run: |
-          if [ -f public/CNAME ] || [ -f CNAME ]; then echo "BASE_PATH=/" >> "$GITHUB_ENV";
-          else echo "BASE_PATH=/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_ENV"; fi
+        working-directory: source
       - run: npm run build
+        working-directory: source
         env:
           VITE_BACKEND_URL: ${{ vars.VITE_BACKEND_URL }}
           VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
-      # GitHub Pages has no rewrites: serving the app as 404.html lets /services etc. load directly.
-      - run: cp dist/index.html dist/404.html
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # 404.html is a copy of the app so /services, /gallery and /contact load directly.
+      - name: Copy build to repo root
+        run: |
+          rm -rf assets
+          cp -r source/dist/assets assets
+          cp source/dist/index.html index.html
+          cp source/dist/index.html 404.html
+          touch .nojekyll
+      - name: Commit build
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add -A index.html 404.html assets .nojekyll
+          git diff --cached --quiet && exit 0
+          git commit -m "Rebuild site"
+          git push
