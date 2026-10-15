@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 156 66% 7%;
+        --foreground: 45 30% 94%;
+        --card: 152 60% 13%;
+        --card-foreground: 45 30% 94%;
+        --popover: 152 60% 13%;
+        --popover-foreground: 45 30% 94%;
+        --primary: 36 45% 68%;
+        --primary-foreground: 156 66% 7%;
+        --secondary: 152 55% 10%;
+        --secondary-foreground: 45 30% 94%;
+        --muted: 152 40% 14%;
+        --muted-foreground: 150 12% 64%;
+        --accent: 36 45% 68%;
+        --accent-foreground: 156 66% 7%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 36 22% 26%;
+        --input: 36 20% 26%;
+        --ring: 36 45% 68%;
+        --chart-1: 220 70% 50%;
+        --chart-2: 160 60% 45%;
+        --chart-3: 30 80% 55%;
+        --chart-4: 280 65% 60%;
+        --chart-5: 340 75% 55%;
+        --radius: 0.25rem;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    html {
+        background-color: #061E14;
+    }
+    body {
+        @apply bg-obsidian text-cream font-sans;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+    }
+    input, select, textarea {
+        color-scheme: dark;
+    }
+    ::selection {
+        background: #D4B886;
+        color: #061E14;
+    }
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #061E14;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1d4534;
+        border-radius: 8px;
+        border: 2px solid #061E14;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #D4B886;
+    }
+}
+
+@layer components {
+    .eyebrow {
+        @apply text-[11px] uppercase tracking-[0.32em] text-gold font-mono;
+    }
+    .gold-frame {
+        position: relative;
+    }
+    .gold-frame::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform: translate(14px, 14px);
+        border: 1px solid rgba(212, 184, 134, 0.35);
+        pointer-events: none;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 0;
+    }
+    .gold-frame:hover::before {
+        transform: translate(8px, 8px);
+    }
+    .gold-frame > * {
+        position: relative;
+        z-index: 1;
+    }
+    .hero-scrim {
+        background: linear-gradient(to top, #061E14 0%, rgba(6, 30, 20, 0.55) 42%, rgba(6, 30, 20, 0.22) 72%, rgba(2, 18, 11, 0.5) 100%);
+    }
+    .hero-scrim-top {
+        background: linear-gradient(to bottom, rgba(2, 18, 11, 0.55) 0%, transparent 30%);
+    }
+}
+
+@layer utilities {
+    .text-outline-gold {
+        -webkit-text-stroke: 1px rgba(212, 184, 134, 0.6);
+        color: transparent;
+    }
+    .text-outline-faint {
+        -webkit-text-stroke: 1px rgba(244, 241, 234, 0.16);
+        color: transparent;
+    }
+    .photo-tint {
+        filter: saturate(0.82) contrast(1.06) brightness(0.88);
+    }
+    .grain::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        pointer-events: none;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .gold-glow {
+        box-shadow: 0 0 80px rgba(212, 184, 134, 0.14), 0 0 160px rgba(212, 184, 134, 0.06);
+    }
+    .vignette {
+        background: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 0%, rgba(6, 30, 20, 0.65) 100%);
+    }
+    .writing-vertical {
+        writing-mode: vertical-rl;
+    }
+}
+
+html.lenis, html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
+}
