@@ -27,7 +27,7 @@ jobs:
       # With a custom domain (public/CNAME) the site lives at "/", otherwise at "/<repo>/".
       - name: Pick base path
         run: |
-          if [ -f public/CNAME ]; then echo "BASE_PATH=/" >> "$GITHUB_ENV";
+          if [ -f public/CNAME ] || [ -f CNAME ]; then echo "BASE_PATH=/" >> "$GITHUB_ENV";
           else echo "BASE_PATH=/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_ENV"; fi
       - run: npm run build
         env:
