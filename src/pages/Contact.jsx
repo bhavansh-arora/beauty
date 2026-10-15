@@ -13,7 +13,24 @@ import { PageHero } from "../components/PageHero";
 import { Reveal, EASE } from "../components/Motion";
 import { STUDIO, SERVICE_CATEGORIES, FAQS, IMAGES } from "../constants/content";
 
-const API = `${import.meta.env.VITE_BACKEND_URL}/api`;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || "917017905835";
+
+// Without a backend, hand the enquiry over to WhatsApp with the details prefilled.
+const sendViaWhatsApp = (form) => {
+  const lines = [
+    "New enquiry",
+    `Name: ${form.name}`,
+    `Email: ${form.email}`,
+    form.phone && `Telephone: ${form.phone}`,
+    form.service && `Ritual: ${form.service}`,
+    form.date && `Preferred date: ${form.date}`,
+    form.message && `Message: ${form.message}`,
+  ].filter(Boolean);
+  const url = `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(lines.join("\n"))}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+};
 
 const INFO = [
   { icon: MapPin, label: "The Atelier", value: STUDIO.address, testid: "contact-address" },
@@ -36,7 +53,8 @@ export default function Contact() {
     if (sending) return;
     setSending(true);
     try {
-      await axios.post(`${API}/contact`, form);
+      if (BACKEND_URL) await axios.post(`${API}/contact`, form);
+      else sendViaWhatsApp(form);
       toast.success("Your enquiry has been received. Our concierge will write to you within one working day.");
       setForm({ name: "", email: "", phone: "", service: "", date: "", message: "" });
     } catch (err) {

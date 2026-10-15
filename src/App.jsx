@@ -89,7 +89,7 @@ function App() {
             />
           )}
         </AnimatePresence>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Navbar />
           <AnimatedRoutes />
           <Footer />

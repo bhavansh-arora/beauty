@@ -16,10 +16,18 @@ Most text, prices, images and contact details live in `src/constants/content.js`
 
 ## Contact form
 
-The form posts to `${VITE_BACKEND_URL}/api/contact`. Copy `.env.example` to `.env`
-and set `VITE_BACKEND_URL` to your backend. Without it, submissions show the error toast.
+By default the form opens WhatsApp with the enquiry prefilled, sent to
+`VITE_WHATSAPP_NUMBER` (defaults to 917017905835). If `VITE_BACKEND_URL` is set,
+it posts to `${VITE_BACKEND_URL}/api/contact` instead. For GitHub Pages, set
+these under Settings → Secrets and variables → Actions → Variables.
 
-## Deploying
+## Deploying to GitHub Pages
 
-- **Vercel:** import the repo; `vercel.json` handles page routing.
-- **Netlify:** build command `npm run build`, publish directory `dist`; `public/_redirects` handles routing.
+1. Settings → Pages → Source: **GitHub Actions**.
+2. Push to `main`; `.github/workflows/deploy.yml` builds and publishes the site.
+   It is served at `https://<user>.github.io/beauty/` until a custom domain is set.
+3. Custom domain: add `public/CNAME` containing your domain (e.g. `beauty.codebunny.net`),
+   push, then add a DNS `CNAME` record pointing that domain to `<user>.github.io`.
+   The workflow switches the base path to `/` automatically when `public/CNAME` exists.
+
+Vercel (`vercel.json`) and Netlify (`public/_redirects`) also work out of the box.
